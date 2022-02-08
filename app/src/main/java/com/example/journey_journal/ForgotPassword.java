@@ -41,14 +41,15 @@ public class ForgotPassword extends AppCompatActivity {
     }
 
     private void validatedata() {
-        email=Email_txt.getText().toString().trim();
+        String email=Email_txt.getText().toString();
         if (email.isEmpty()){
-            Email_txt.setError("Required Email");
+            Email_txt.setError("Required Email ID");
 
         }else {
             Forgotpassword();
         }
     }
+
 
     private void Forgotpassword() {
         auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Journey_Journal</string>
+    <string name="Home">Home</string>
+    <string name="About">about</string>
+    <string name="Contact">contact</string>
+    <string name="Share">share</string>
+    <string name="Setting">setting</string>
+    <string name="Support">support</string>
+    <string name="SendGift">sengift</string>
 </resources>
