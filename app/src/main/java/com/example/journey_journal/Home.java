@@ -4,18 +4,32 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Home extends AppCompatActivity {
+
+    Button add_btn;
+
+      //RecyclerView
+    RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+    List<ModelClass> userList;
+    Adapter adapter;
 
    
     NavigationView navigationView;
@@ -24,12 +38,20 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         getSupportActionBar().hide();
 
 
+        add_btn=findViewById(R.id.btn_add);
+        add_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+           startActivity(new Intent(getApplicationContext(),DiscreptionPage.class));
+            }
+        });
 
-
+  //recyclerView
+        initData();
+        initRecyclerView();
 
 
      //Bottom Navigation Start
@@ -132,4 +154,35 @@ public class Home extends AppCompatActivity {
 
 
     }
+    //RecyclerView Start
+    private void initData() {
+
+        userList=new ArrayList<>();
+        userList.add(new ModelClass(R.drawable.firbase2,R.drawable.ic_baseline_delete_24,R.drawable.ic_baseline_edit_24,
+                "Rahul Kumar","This is Rahul Kumar ! what about you?","Delhi India803213"));
+        userList.add(new ModelClass(R.drawable.hart,R.drawable.ic_baseline_delete_24,R.drawable.ic_baseline_edit_24,
+                "Rohan Kumar","This is Rahul Kumar ! what about you?","Delhi India803213"));
+        userList.add(new ModelClass(R.drawable.home,R.drawable.ic_baseline_delete_24,R.drawable.ic_baseline_edit_24,
+                "Rupak Kumar","This is Rahul Kumar ! what about you?","Delhi India803213"));
+        userList.add(new ModelClass(R.drawable.image3,R.drawable.ic_baseline_delete_24,R.drawable.ic_baseline_edit_24,
+                "Binod Kumar","This is Rahul Kumar ! what about you?","Delhi India803213"));
+        userList.add(new ModelClass(R.drawable.image4,R.drawable.ic_baseline_delete_24,R.drawable.ic_baseline_edit_24,
+                "Jabir Kumar","This is Rahul Kumar ! what about you?","Delhi India803213"));
+        userList.add(new ModelClass(R.drawable.firbase2,R.drawable.ic_baseline_delete_24,R.drawable.ic_baseline_edit_24,
+                "asmit Kumar","This is Rahul Kumar ! what about you?","Delhi India803213"));
+    }
+
+    private void initRecyclerView() {
+
+        recyclerView=findViewById(R.id.recycler);
+        linearLayoutManager= new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter=new Adapter(userList);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+    //RecyclerView End
+
+
 }
