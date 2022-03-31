@@ -37,7 +37,7 @@ public class Home extends AppCompatActivity {
     ItemsAdapter itemsAdapter;
     RVItemClickListener delImgViewClickListener;
     RVItemClickListener itemViewClickListener;
-
+    RVItemClickListener editImgViewClickListener;
     NavigationView navigationView;
     BottomNavigationView bottomNavigationView;
 
@@ -53,8 +53,8 @@ public class Home extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler);
 
         setupListeners();
+        setupAdapter();
         setupRecyclerView();
-        initData();
 
         btnAdd.setOnClickListener(this::btnAddOnClick);
 
@@ -135,12 +135,8 @@ public class Home extends AppCompatActivity {
                         shareintent.putExtra(Intent.EXTRA_TEXT, "https://www.facebook.com/ ");
                         shareintent.putExtra(Intent.EXTRA_SUBJECT, "Your Application link hare ");
                         startActivity(Intent.createChooser(shareintent, "share Via"));
-
-
                         break;
                 }
-
-
                 return false;
             }
         });
@@ -164,7 +160,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void btnAddOnClick(View view) {
-        startActivity(DescriptionPage.getIntent(this, null));
+        startActivity(DescriptionPage.getIntentToCreate(this));
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -191,12 +187,16 @@ public class Home extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void setupListeners() {
         itemViewClickListener = (view, position) -> startActivity(
-                DescriptionPage.getIntent(getApplicationContext(), journeys.get(position))
+                DetailsPage.getIntent(getApplicationContext(), journeys.get(position).getId())
         );
         delImgViewClickListener = (view, position) -> {
             dbHelper.delete(journeys.get(position).getId());
+            initData();
             itemsAdapter.notifyDataSetChanged();
         };
+        editImgViewClickListener = (view, position) -> startActivity(
+                DescriptionPage.getIntentToEdit(getApplicationContext(), journeys.get(position).getId())
+        );
     }
 
     //    private void initData() {
@@ -215,8 +215,17 @@ public class Home extends AppCompatActivity {
     //                ,"Rishu Kumar","Hello Rishu How are you ?","Chitawn Nepal-101010"));
     //    }
 
+    private void setupAdapter() {
+        itemsAdapter = new ItemsAdapter(
+                journeys,
+                itemViewClickListener,
+                delImgViewClickListener,
+                editImgViewClickListener
+        );
+    }
+
     private void setupRecyclerView() {
-        itemsAdapter = new ItemsAdapter(journeys, itemViewClickListener, delImgViewClickListener);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(itemsAdapter);
     }

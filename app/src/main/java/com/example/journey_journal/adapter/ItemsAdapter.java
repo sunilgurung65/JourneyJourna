@@ -20,16 +20,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHolder> {
     private final RVItemClickListener itemViewClickListener;
     private final RVItemClickListener delImgViewClickListener;
+    private final RVItemClickListener editImgViewClickListener;
     private final ArrayList<ModelClass> itemsList;
 
     public ItemsAdapter(
             ArrayList<ModelClass> itemsList,
             RVItemClickListener itemViewClickListener,
-            RVItemClickListener delImgViewClickListener
+            RVItemClickListener delImgViewClickListener,
+            RVItemClickListener editImgViewClickListener
     ){
         this.itemsList=itemsList;
         this.itemViewClickListener = itemViewClickListener;
         this.delImgViewClickListener = delImgViewClickListener;
+        this.editImgViewClickListener = editImgViewClickListener;
     }
 
     @NonNull
@@ -43,7 +46,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.txtTitle.setText(itemsList.get(position).getJTitle());
-        holder.txtDis.setText(itemsList.get(position).getJDis());
+        String desc = itemsList.get(position).getJDis();
+        // change max size as required
+        final int MaxSize = 100;
+        if(desc.length() > MaxSize){
+            desc = desc.substring(0, MaxSize);
+            desc= desc.concat("...");
+        }
+        holder.txtDis.setText(desc);
         holder.txtLocation.setText(itemsList.get(position).getJLocation());
         byte[] imageBlob = itemsList.get(position).getImage();
         if (imageBlob != null) {
@@ -61,7 +71,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView txtTitle, txtDis, txtLocation;
-        CircleImageView delImgView;
+        CircleImageView delImgView, editImgView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,17 +80,23 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
             txtDis = itemView.findViewById(R.id.j_dis);
             txtLocation = itemView.findViewById(R.id.j_location);
             delImgView = itemView.findViewById(R.id.j_delete);
+            editImgView = itemView.findViewById(R.id.j_edit);
 
             itemView.setOnClickListener(this::itemViewOnClick);
             delImgView.setOnClickListener(this::delImgViewOnClick);
+            editImgView.setOnClickListener(this::editImgViewOnClick);
+        }
+
+        private void editImgViewOnClick(View view) {
+            editImgViewClickListener.onItemClick(view, getAdapterPosition());
         }
 
         private void delImgViewOnClick(View view) {
-            delImgViewClickListener.onItemClick(view, getBindingAdapterPosition());
+            delImgViewClickListener.onItemClick(view, getAdapterPosition());
         }
 
         public void itemViewOnClick(View view) {
-            itemViewClickListener.onItemClick(view, getBindingAdapterPosition());
+            itemViewClickListener.onItemClick(view, getAdapterPosition());
         }
     }
 

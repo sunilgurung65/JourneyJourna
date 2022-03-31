@@ -7,4 +7,10 @@
     <string name="Setting">setting</string>
     <string name="Support">support</string>
     <string name="SendGift">sengift</string>
+    <string name="journey_image">Journey Image</string>
+    <string name="journey_title">Mardi Hill Trekking</string>
+    <string name="pokhara_kaski_nepal">Pokhara, Kaski, Nepal</string>
+    <string name="journey_desc">Mardi Himal Trek is a trending short hiking trail that is suitable to spend 1 week’s holiday in Nepal.</string>
+    <string name="back">Back</string>
+    <string name="journey_location">Delhi India-803213</string>
 </resources>

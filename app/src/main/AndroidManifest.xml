@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.journey_journal">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +16,9 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Journey_Journal">
+        <activity
+            android:name=".DetailsPage"
+            android:exported="false" />
         <activity
             android:name=".DescriptionPage"
             android:exported="false" />
@@ -25,7 +32,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Splash_Screen"
+            android:name=".Home"
             android:exported="false" />
         <activity
             android:name=".ForgotPassword"
@@ -34,7 +41,7 @@
             android:name=".Signup"
             android:exported="false" />
         <activity
-            android:name=".Home"
+            android:name=".Splash_Screen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -59,40 +59,25 @@ public class DbHelper extends SQLiteOpenHelper {
             byte[] image
     ) {
         SQLiteDatabase database = getWritableDatabase();
-
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (NULL, ?, ?, ?, ?)";
-
         SQLiteStatement statement = database.compileStatement(sql);
         statement.clearBindings();
-
         statement.bindString(1, title);
         statement.bindString(2, desc);
         statement.bindString(3, location);
         statement.bindBlob(4, image);
-
         long result = statement.executeInsert();
+        database.close();
         return result != -1;
     }
 
-    public ModelClass getElementById(int id) {
+    public Cursor getElementById(int id) {
         SQLiteDatabase database = getWritableDatabase();
         String sqlQuery = "SELECT * FROM " + TABLE_NAME + " WHERE id=?";
-        Cursor cursor = database.rawQuery(
+        return database.rawQuery(
                 sqlQuery,
                 new String[]{String.valueOf(id)}
         );
-        ModelClass model = null;
-        if (cursor != null) {
-            cursor.moveToFirst();
-            String title = cursor.getString(1);
-            String desc = cursor.getString(2);
-            String location = cursor.getString(3);
-            byte[] image = cursor.getBlob(4);
-            model = new ModelClass(id, title, desc, location, image);
-            cursor.close();
-        }
-        database.close();
-        return model;
     }
 
     public Cursor getAll(String sqlQuery) {
@@ -101,28 +86,40 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public Boolean update(
-            String _id,
+            int _id,
             String title,
             String desc,
             String location,
             byte[] image
     ) {
         SQLiteDatabase database = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, _id);
-        contentValues.put(TITLE, title);
-        contentValues.put(DESC, desc);
-        contentValues.put(LOCATION, location);
-        contentValues.put(IMAGE, Arrays.toString(image));
-        int result = database.update(
-                TABLE_NAME,
-                contentValues,
-                COLUMN_ID + "=?",
-                new String[]{_id});
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(COLUMN_ID, _id);
+//        contentValues.put(TITLE, title);
+//        contentValues.put(DESC, desc);
+//        contentValues.put(LOCATION, location);
+//        contentValues.put(IMAGE, Arrays.toString(image));
+//        int result = database.update(
+//                TABLE_NAME,
+//                contentValues,
+//                COLUMN_ID + "=?",
+//                new String[]{ String.valueOf(_id) });
+
+        String sql = "UPDATE " + TABLE_NAME + " SET " + TITLE + "=?, " +
+                DESC + "=?, " + LOCATION + "=?, " + IMAGE + "=? WHERE id = ?";
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+        statement.bindString(1, title);
+        statement.bindString(2, desc);
+        statement.bindString(3, location);
+        statement.bindBlob(4, image);
+        statement.bindLong(5, _id);
+        int result = statement.executeUpdateDelete();
+        database.close();
         return result != -1;
     }
 
-    public void delete(long _id) {
+    public void delete(int _id) {
         SQLiteDatabase database = getWritableDatabase();
         int result = database.delete(
                 TABLE_NAME,

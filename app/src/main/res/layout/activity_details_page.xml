@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".DetailsPage">
+
+    <ImageView
+        android:id="@+id/imvJourney"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:background="#eaeaea"
+        android:contentDescription="@string/journey_image"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/txvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:text="@string/journey_title"
+        android:textAlignment="textStart"
+        android:textColor="@color/Rahul"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imv_location"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_location_blue" />
+
+        <TextView
+            android:id="@+id/txvLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/imv_location"
+            android:foregroundGravity="bottom"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/pokhara_kaski_nepal"
+            android:textAlignment="textStart"
+            android:textColor="#7a7a7a"
+            android:textStyle="italic" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txvDesc"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginBottom="40dp"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/journey_desc"
+        android:textAlignment="textStart" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/Rahul"
+        android:text="@string/back" />
+
+
+</LinearLayout>

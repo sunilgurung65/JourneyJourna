@@ -47,7 +47,6 @@ public class   Signup extends AppCompatActivity {
                 if (TextUtils.isEmpty(email)){
                     Toast.makeText(Signup.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
                     return;
-
                 }
                 if (TextUtils.isEmpty(password)){
                     Toast.makeText(Signup.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
@@ -61,22 +60,19 @@ public class   Signup extends AppCompatActivity {
                 }
                 if (password.length()<6){
                     Toast.makeText(Signup.this, "Password to short", Toast.LENGTH_SHORT).show();
-
+                    return;
                 }
                 if(password.equals(confirmpassword)){
-                    mauth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                                Toast.makeText(Signup.this, "Login Com", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(Signup.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
+                    mauth.createUserWithEmailAndPassword(email,password)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()){
+                                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                                    Toast.makeText(Signup.this, "Login Com", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(Signup.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
 
             }

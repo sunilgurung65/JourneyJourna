@@ -26,48 +26,53 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/workshop" />
+                android:src="@drawable/workshop"
+                android:contentDescription="@string/journey_image" />
 
         </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/j_title"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/card"
-            android:text="Rahul Kumar"
-            android:textColor="@color/black"
+            android:maxLines="1"
+            android:text="@string/journey_title"
             android:textSize="22sp"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/j_dis"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_below="@id/j_title"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/card"
-
-            android:text=" Hello Rahul  ! How Are you Today? " />
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/card"
+            android:textColor="@color/black"
+            android:text="@string/journey_desc"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/j_location"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/j_dis"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/card"
-            android:text="Delhi India-803213" />
+            android:maxLines="1"
+            android:text="@string/journey_location"
+            android:textSize="12sp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/j_delete"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
-            android:layout_toEndOf="@+id/j_title"
+            android:layout_toEndOf="@id/j_title"
             android:src="@drawable/ic_baseline_delete_24"
             aap:civ_border_color="@color/black" />
 
@@ -76,9 +81,9 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@+id/j_delete"
-            android:layout_marginLeft="80dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="30dp"
-            android:layout_toRightOf="@+id/j_title"
+            android:layout_toEndOf="@+id/j_title"
             android:src="@drawable/ic_baseline_edit_24" />
     </RelativeLayout>
 
