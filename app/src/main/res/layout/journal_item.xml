@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:aap="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/j_card"
@@ -16,7 +17,7 @@
             android:id="@+id/card"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             aap:cardCornerRadius="60dp">
 
@@ -33,9 +34,9 @@
             android:id="@+id/j_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/card"
+            android:layout_toEndOf="@+id/card"
             android:text="Rahul Kumar"
             android:textColor="@color/black"
             android:textSize="22sp"
@@ -49,24 +50,24 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/card"
 
-            android:text="Raghib chacha  Hello ! How Are you Today " />
+            android:text=" Hello Rahul  ! How Are you Today? " />
 
         <TextView
-            android:id="@+id/j_locatio"
+            android:id="@+id/j_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/j_dis"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/card"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/card"
             android:text="Delhi India-803213" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/j_delete"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginLeft="80dp"
+            android:layout_marginStart="80dp"
             android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/j_title"
+            android:layout_toEndOf="@+id/j_title"
             android:src="@drawable/ic_baseline_delete_24"
             aap:civ_border_color="@color/black" />
 

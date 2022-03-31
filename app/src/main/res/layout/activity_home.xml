@@ -27,6 +27,7 @@
             android:id="@+id/imagemenu"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_baseline_menu_24"
             />
@@ -66,7 +67,7 @@
         >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"
@@ -87,7 +88,7 @@
         android:background="@drawable/circlebutton"
         android:gravity="center_vertical|center_horizontal"
         android:layout_gravity="right"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="5dp"
         android:text="+"
         android:textColor="#fff" />

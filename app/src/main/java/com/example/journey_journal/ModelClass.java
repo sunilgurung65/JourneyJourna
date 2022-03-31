@@ -1,44 +1,61 @@
 package com.example.journey_journal;
 
 public class ModelClass {
-    private int image1;
-    private  int image2;
-    private  int image3;
-    private  String txt_title;
-    private  String txt_des;
-    private  String txt_location;
 
+    private  int id;
+    private  String JTitle;
+    private  String JDis;
+    private  String JLocation;
+    private  byte[] image;
 
-    ModelClass(int image1 , int image2 , int image3 , String txt_title , String txt_des , String txt_location){
-        this.image1=image1;
-        this.image2=image2;
-        this.image3=image3;
-        this.txt_title=txt_title;
-        this.txt_des=txt_des;
-        this.txt_location=txt_location;
+    public  ModelClass (int id, String jTitle, String jDis, String jLocation, byte[] image){
+        this.id=id;
+        this.JTitle=jTitle;
+        this.JDis=jDis;
+        this.JLocation=jLocation;
+        this.image=image;
     }
 
-    public int getImage1() {
-        return image1;
+    public int getId() {
+        return id;
     }
 
-    public int getImage2() {
-        return image2;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getImage3() {
-        return image3;
+    public String getJTitle() {
+        return JTitle;
     }
 
-    public String getTxt_title() {
-        return txt_title;
+    public void setJTitle(String JTitle) {
+        this.JTitle = JTitle;
     }
 
-    public String getTxt_des() {
-        return txt_des;
+    public String getJDis() {
+        return JDis;
     }
 
-    public String getTxt_location() {
-        return txt_location;
+    public void setJDis(String JDis) {
+        this.JDis = JDis;
     }
+
+    public String getJLocation() {
+        return JLocation;
+    }
+
+    public void setJLocation(String JLocation) {
+        this.JLocation = JLocation;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+
 }
+
