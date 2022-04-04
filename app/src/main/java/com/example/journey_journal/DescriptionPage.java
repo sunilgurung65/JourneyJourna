@@ -28,19 +28,31 @@ import java.util.Arrays;
 public class DescriptionPage extends AppCompatActivity {
     // for debugging
     public static final String TAG = DescriptionPage.class.getSimpleName();
-    public static final String ID = "Id";
 
+    public static final String ID = "Id";
     public static final int PICK_IMAGE = 100;
+    private int id = 0;
+    private ModelClass journey;
+    Uri imageUri;
 
     Bundle intentData;
     DbHelper dbHelper;
     TextView txtTitle, txtDesc;
     ImageView imShowImage, imUploadImage, imAddLocation;
-    Button btnSumbit;
-    Uri imageUri;
+    Button btnSubmit;
 
+    /*
+    *  Any Activity should ask for DescriptionPage Activity for intent to start this activity
+    *
+    *  It is implemented this way as it follows the 'S' principle of 'Solid' architecture,
+    *  i.e. Single Responsibility Principle
+    * */
     public static Intent getIntentToCreate(Context context) {
-        return new Intent(context, DescriptionPage.class);
+        Intent intent = new Intent(context, DescriptionPage.class);
+        // Note: id is passed 0 because you will create new object in database
+        // new id is created thereafter.
+        intent.putExtra(ID, 0);
+        return intent;
     }
 
     public static Intent getIntentToEdit(Context context, int id) {
@@ -54,73 +66,101 @@ public class DescriptionPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description_page);
 
+        // init object fields
         dbHelper = new DbHelper(this);
         intentData = getIntent().getExtras();
+
+        // init views
         txtTitle = findViewById(R.id.txtTitle);
         txtDesc = findViewById(R.id.txtDesc);
         imShowImage = findViewById(R.id.showImage);
         imUploadImage = findViewById(R.id.imUploadImage);
         imAddLocation = findViewById(R.id.imAddLocation);
-        btnSumbit = findViewById(R.id.btn_submit);
+        btnSubmit = findViewById(R.id.btn_submit);
 
+        // setup click listeners
+        // Here, listeners are function with specific signature or simply - structure.
+        // These methods are called method reference which it is as its name applies;
+        // means methods are not called here, their names are simply referenced respectively.
         imUploadImage.setOnClickListener(this::promptToChooseImage);
         imAddLocation.setOnClickListener(this::promptToAddLocation);
-        btnSumbit.setOnClickListener(this::onSubmitButtonClick);
+        btnSubmit.setOnClickListener(this::onSubmitButtonClick);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        if(intentData != null && !intentData.isEmpty() && intentData.getInt(ID) > 0) {
-//            populateData();
-//            getIntent().removeExtra(ID);
-//        }
+        checkIdInIntent();
     }
 
-    private void populateData() {
-        int id = getIntent().getExtras().getInt(ID);
-        Log.d(TAG, "ID="+id);
-        ModelClass journey = null;
-        Cursor cursor = dbHelper.getElementById(id);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            journey = new ModelClass(
-                    id,
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getBlob(4)
-            );
+    // check value of id in intent extras
+    private void checkIdInIntent() {
+        id = intentData.getInt(ID);
+        if (id > 0) {
+            populateData();
         }
-        if (journey != null) {
-            txtTitle.setText(journey.getJTitle());
-            // txtLocation.setText(journey.getJLocation());
-            txtDesc.setText(journey.getJDis());
+    }
+
+    // check journey object, fetch if it is null and populate the views
+    private void populateData() {
+        Log.d(TAG, "ID=" + id);
+        //if journey is null, fetch data
+        if (journey == null) {
+            Cursor cursor = dbHelper.getElementById(id);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                journey = new ModelClass(
+                        id,
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getBlob(4)
+                );
+            } else {
+                Toast.makeText(getApplicationContext(), "Could not load data",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        // populate views
+        txtTitle.setText(journey.getJTitle());
+        // txtLocation.setText(journey.getJLocation());
+        txtDesc.setText(journey.getJDis());
+        // if imageUri is obtained run this block
+        if (imageUri != null){
+            try {
+                // create a buffer from the image at given uri
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                // decode buffer into bitmap
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                // set bitmap for the ImageView
+                imShowImage.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        // else set image from blob obtained from database
+        else {
             byte[] imgBlob = journey.getImage();
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgBlob, 0, imgBlob.length);
             imShowImage.setImageBitmap(bitmap);
-        } else {
-            Toast.makeText(getApplicationContext(), "Could not load data",
-                    Toast.LENGTH_SHORT).show();
         }
     }
 
     private void onSubmitButtonClick(View view) {
         String title = txtTitle.getText().toString();
-        Log.d(TAG, "Title="+title);
+        Log.d(TAG, "Title=" + title);
         String desc = txtDesc.getText().toString();
-        Log.d(TAG, "Description="+desc);
+        Log.d(TAG, "Description=" + desc);
         String location = "Hard Coded Location";
-        Log.d(TAG, "Location="+location);
+        Log.d(TAG, "Location=" + location);
         byte[] imgBlob = imageViewToByte(imShowImage);
-        Log.d(TAG, "Image Blob="+ Arrays.toString(imgBlob));
-        if (validateData(title, desc, location, imgBlob)){
-            String action = getIntent().getAction();
-//            if (action!= null && action.equals(ACTION_EDIT)) {
-//                saveEditData(title, desc, location, imgBlob);
-//            } else {
-                saveNewData(title, desc, location, imgBlob);
-//            }
+        Log.d(TAG, "Image Blob=" + Arrays.toString(imgBlob));
+        if (validateData(title, desc, location, imgBlob)) {
+            if (id > 0) {
+                saveEditData(title, desc, location, imgBlob);
+            } else {
+            saveNewData(title, desc, location, imgBlob);
+            }
         }
     }
 
@@ -153,6 +193,7 @@ public class DescriptionPage extends AppCompatActivity {
         }
     }
 
+    // validate
     private boolean validateData(String title, String desc, String location, byte[] imageBlob) {
         if (title.isEmpty()) {
             txtTitle.setError("Title is required!");
@@ -192,21 +233,16 @@ public class DescriptionPage extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
+    /*
+    * Override onActivityResult method: it checks if this activity
+    * was paused requesting any type of result from other activities
+    * by matching its request code with a known request code of this activity.
+    * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            Uri imageUri = data.getData();
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                imShowImage.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-//            String mimeType = getContentResolver().getType(imageUri);
-//            Log.d(TAG, "Image format="+mimeType);
-//            imShowImage.setTag(mimeType);
+            imageUri = data.getData();
         } else {
             Toast.makeText(getApplicationContext(),
                     "Could not pick image!",
@@ -214,20 +250,14 @@ public class DescriptionPage extends AppCompatActivity {
         }
     }
 
+    /*
+    * Convert image drawable in an imageview to byte[]
+    * Takes ImageView object as param
+    * */
     public static byte[] imageViewToByte(ImageView image) {
         Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        String mimeType = image.getTag().toString();
-//        if (mimeType.equals("image/PNG") || mimeType.equals("image/png")) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        } else if (
-//                mimeType.equals("image/JPG") ||
-//                        mimeType.equals("image/jpg") ||
-//                        mimeType.equals("image/JPEG") ||
-//                        mimeType.equals("image/jpeg")
-//        ) {
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//        }
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 }

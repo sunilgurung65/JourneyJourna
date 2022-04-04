@@ -74,4 +74,8 @@ public class ForgotPassword extends AppCompatActivity {
             }
         });
     }
+
+    public void Signup(View view) {
+        startActivity(new Intent(getApplicationContext(),Signup.class));
+    }
 }

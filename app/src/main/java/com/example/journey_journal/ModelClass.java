@@ -1,5 +1,7 @@
 package com.example.journey_journal;
 
+import android.view.Display;
+
 public class ModelClass {
 
     private  int id;
@@ -7,6 +9,9 @@ public class ModelClass {
     private  String JDis;
     private  String JLocation;
     private  byte[] image;
+
+    // for creating an empty model
+    public ModelClass(){}
 
     public  ModelClass (int id, String jTitle, String jDis, String jLocation, byte[] image){
         this.id=id;

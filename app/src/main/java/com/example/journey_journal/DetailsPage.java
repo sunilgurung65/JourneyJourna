@@ -20,12 +20,7 @@ import com.example.journey_journal.db.DbHelper;
 public class DetailsPage extends AppCompatActivity {
     // for debugging
     public static final String TAG = DetailsPage.class.getSimpleName();
-
     public static final String ID = "Id";
-    public static final String TITLE = "Title";
-    public static final String DESC = "Desc";
-    public static final String LOCATION = "Location";
-    public static final String IMAGE = "Image";
 
     ImageView imJourney;
     TextView tvTitle, tvLocation, tvDesc;
