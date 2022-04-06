@@ -25,38 +25,23 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-public class DescriptionPage extends AppCompatActivity {
-    // for debugging
-    public static final String TAG = DescriptionPage.class.getSimpleName();
-
+public class EditJourney extends AppCompatActivity {
+    public static final String TAG = EditJourney.class.getSimpleName();
     public static final String ID = "Id";
     public static final int PICK_IMAGE = 100;
-    private int id = 0;
-    private ModelClass journey;
-    Uri imageUri;
 
+    int id = 0;
+    ModelClass journey;
     Bundle intentData;
     DbHelper dbHelper;
+    Uri imageUri;
+
     TextView txtTitle, txtDesc;
     ImageView imShowImage, imUploadImage, imAddLocation;
     Button btnSubmit;
 
-    /*
-    *  Any Activity should ask for DescriptionPage Activity for intent to start this activity
-    *
-    *  It is implemented this way as it follows the 'S' principle of 'Solid' architecture,
-    *  i.e. Single Responsibility Principle
-    * */
-    public static Intent getIntentToCreate(Context context) {
-        Intent intent = new Intent(context, DescriptionPage.class);
-        // Note: id is passed 0 because you will create new object in database
-        // new id is created thereafter.
-        intent.putExtra(ID, 0);
-        return intent;
-    }
-
-    public static Intent getIntentToEdit(Context context, int id) {
-        Intent intent = new Intent(context, DescriptionPage.class);
+    public static Intent getIntent(Context context, int id) {
+        Intent intent = new Intent(context, EditJourney.class);
         intent.putExtra(ID, id);
         return intent;
     }
@@ -64,10 +49,10 @@ public class DescriptionPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_description_page);
-
+        setContentView(R.layout.activity_edit_journey);
         // init object fields
         dbHelper = new DbHelper(this);
+        // retrieve intent data
         intentData = getIntent().getExtras();
 
         // init views
@@ -85,25 +70,20 @@ public class DescriptionPage extends AppCompatActivity {
         imUploadImage.setOnClickListener(this::promptToChooseImage);
         imAddLocation.setOnClickListener(this::promptToAddLocation);
         btnSubmit.setOnClickListener(this::onSubmitButtonClick);
+        Log.d(TAG, "onCreate");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        checkIdInIntent();
-    }
-
-    // check value of id in intent extras
-    private void checkIdInIntent() {
-        id = intentData.getInt(ID);
-        if (id > 0) {
-            populateData();
-        }
+        populateData();
     }
 
     // check journey object, fetch if it is null and populate the views
     private void populateData() {
+        id = intentData.getInt(ID);
         Log.d(TAG, "ID=" + id);
+
         //if journey is null, fetch data
         if (journey == null) {
             Cursor cursor = dbHelper.getElementById(id);
@@ -126,20 +106,7 @@ public class DescriptionPage extends AppCompatActivity {
         // txtLocation.setText(journey.getJLocation());
         txtDesc.setText(journey.getJDis());
         // if imageUri is obtained run this block
-        if (imageUri != null){
-            try {
-                // create a buffer from the image at given uri
-                InputStream inputStream = getContentResolver().openInputStream(imageUri);
-                // decode buffer into bitmap
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                // set bitmap for the ImageView
-                imShowImage.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        // else set image from blob obtained from database
-        else {
+        if (imageUri == null){
             byte[] imgBlob = journey.getImage();
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgBlob, 0, imgBlob.length);
             imShowImage.setImageBitmap(bitmap);
@@ -156,40 +123,7 @@ public class DescriptionPage extends AppCompatActivity {
         byte[] imgBlob = imageViewToByte(imShowImage);
         Log.d(TAG, "Image Blob=" + Arrays.toString(imgBlob));
         if (validateData(title, desc, location, imgBlob)) {
-            if (id > 0) {
-                saveEditData(title, desc, location, imgBlob);
-            } else {
-            saveNewData(title, desc, location, imgBlob);
-            }
-        }
-    }
-
-    private void saveNewData(String title, String desc, String location, byte[] imageBlob) {
-        if (dbHelper.insert(title, desc, location, imageBlob)) {
-            Toast.makeText(getApplicationContext(), "Saved Successfully",
-                    Toast.LENGTH_SHORT).show();
-            // startActivity(new Intent(getApplicationContext(), Home.class));
-            finish();
-        } else {
-            Toast.makeText(getApplicationContext(), "Failed to save", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void saveEditData(String title, String desc, String location, byte[] imageBlob) {
-        int id = getIntent().getExtras().getInt(ID);
-        if (dbHelper.update(
-                id,
-                title,
-                desc,
-                location,
-                imageBlob
-        )) {
-            Toast.makeText(getApplicationContext(), "Updated Successfully",
-                    Toast.LENGTH_SHORT).show();
-//            startActivity(new Intent(getApplicationContext(), Home.class));
-            finish();
-        } else {
-            Toast.makeText(getApplicationContext(), "Failed to save", Toast.LENGTH_SHORT).show();
+            saveEditData(title, desc, location, imgBlob);
         }
     }
 
@@ -217,6 +151,23 @@ public class DescriptionPage extends AppCompatActivity {
         return true;
     }
 
+    private void saveEditData(String title, String desc, String location, byte[] imageBlob) {
+        int id = getIntent().getExtras().getInt(ID);
+        if (dbHelper.update(
+                id,
+                title,
+                desc,
+                location,
+                imageBlob
+        )) {
+            Toast.makeText(getApplicationContext(), "Updated Successfully",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), "Failed to save", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @SuppressLint("IntentReset")
     private void promptToChooseImage(View view) {
         // open gallery to select image
@@ -233,16 +184,27 @@ public class DescriptionPage extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
+
     /*
-    * Override onActivityResult method: it checks if this activity
-    * was paused requesting any type of result from other activities
-    * by matching its request code with a known request code of this activity.
-    * */
+     * Override onActivityResult method: it checks if this activity
+     * was paused requesting any type of result from other activities
+     * by matching its request code with a known request code of this activity.
+     * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
             imageUri = data.getData();
+            try {
+                // create a buffer from the image at given uri
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                // decode buffer into bitmap
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                // set bitmap for the ImageView
+                imShowImage.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         } else {
             Toast.makeText(getApplicationContext(),
                     "Could not pick image!",
@@ -251,9 +213,9 @@ public class DescriptionPage extends AppCompatActivity {
     }
 
     /*
-    * Convert image drawable in an imageview to byte[]
-    * Takes ImageView object as param
-    * */
+     * Convert image drawable in an imageview to byte[]
+     * Takes ImageView object as param
+     * */
     public static byte[] imageViewToByte(ImageView image) {
         Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

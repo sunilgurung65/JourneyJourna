@@ -17,10 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Journey_Journal">
         <activity
+            android:name=".EditJourney"
+            android:exported="false" />
+        <activity
             android:name=".DetailsPage"
             android:exported="false" />
         <activity
-            android:name=".DescriptionPage"
+            android:name=".CreateJourney"
             android:exported="false" />
         <activity
             android:name=".Contact"

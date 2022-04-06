@@ -12,11 +12,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.journey_journal.adapter.ItemsAdapter;
@@ -93,8 +91,6 @@ public class Home extends AppCompatActivity {
                         break;
 
                 }
-
-
                 return false;
             }
         });
@@ -160,7 +156,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void btnAddOnClick(View view) {
-        startActivity(DescriptionPage.getIntentToCreate(this));
+        startActivity(CreateJourney.getIntent(this));
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -195,7 +191,7 @@ public class Home extends AppCompatActivity {
             itemsAdapter.notifyDataSetChanged();
         };
         editImgViewClickListener = (view, position) -> startActivity(
-                DescriptionPage.getIntentToEdit(getApplicationContext(), journeys.get(position).getId())
+                EditJourney.getIntent(this, journeys.get(position).getId())
         );
     }
 

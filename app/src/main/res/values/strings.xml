@@ -13,4 +13,7 @@
     <string name="journey_desc">Mardi Himal Trek is a trending short hiking trail that is suitable to spend 1 week’s holiday in Nepal.</string>
     <string name="back">Back</string>
     <string name="journey_location">Delhi India-803213</string>
+    <string name="show_image">Show Image</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="type_description_in_short">Type Description in short</string>
 </resources>
